@@ -5,6 +5,8 @@ export class UnauthorizedError extends Error {
     }
 }
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL ?? ''
+
 type AuthHooks = {
     getToken: () => string | null
     onUnauthorized: () => void
@@ -43,7 +45,7 @@ export async function request<T>(url: string, init?: RequestInit): Promise<T> {
         headers.set('Authorization', `Bearer ${token}`)
     }
 
-    const response = await fetch(url, { ...init, headers })
+    const response = await fetch(`${API_BASE}${url}`, { ...init, headers })
 
     if (response.status === 401) {
         onUnauthorized()

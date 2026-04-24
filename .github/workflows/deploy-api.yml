@@ -1,0 +1,37 @@
+name: Deploy API to Azure
+
+on:
+    push:
+        branches: [main]
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+concurrency:
+    group: deploy-api
+    cancel-in-progress: false
+
+jobs:
+    build-and-deploy:
+        name: Build and deploy
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: actions/setup-dotnet@v4
+              with:
+                  dotnet-version: "10.x"
+
+            - name: Publish
+              run: |
+                  dotnet publish backend/Notes.Api/Notes.Api.csproj \
+                    --configuration Release \
+                    --output ./publish
+
+            - name: Deploy to Azure Web App
+              uses: azure/webapps-deploy@v3
+              with:
+                  app-name: notes-api-ethan
+                  publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+                  package: ./publish
