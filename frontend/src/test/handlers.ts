@@ -87,7 +87,7 @@ function currentUserId(request: Request, authStore: AuthStore): string | null {
     return authStore.tokens.get(match[1]) ?? null
 }
 
-function unauthorized(): HttpResponse {
+function unauthorized(): HttpResponse<unknown> {
     return HttpResponse.json(
         { type: 'about:blank', title: 'Unauthorized', status: 401 },
         { status: 401 },
