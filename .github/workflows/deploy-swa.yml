@@ -30,7 +30,7 @@ jobs:
               working-directory: frontend
 
             - name: Build
-              run: npm run build
+              run: npx vite build
               working-directory: frontend
               env:
                   VITE_API_BASE_URL: https://notes-api-ethan.azurewebsites.net
